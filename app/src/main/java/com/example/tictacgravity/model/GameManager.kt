@@ -5,12 +5,12 @@ class GameManager {
     var isPlayerTurn: Boolean = true
 
 
-    fun switchTurn(){
+    fun switchTurn() {
         isPlayerTurn = !isPlayerTurn
     }
 
-    fun damage(player: Player, damage: Int){
+    fun damage(player: Player, damage: Int) {
 
-        player.life -= damage
+        //player.life -= damage
     }
 }

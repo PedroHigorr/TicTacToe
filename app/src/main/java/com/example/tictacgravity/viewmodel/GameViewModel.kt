@@ -1,7 +1,67 @@
 package com.example.tictacgravity.viewmodel
 
+import com.example.tictacgravity.model.GameManager
+import com.example.tictacgravity.model.MainMatrix
+import com.example.tictacgravity.model.Player
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
 
 class GameViewModel {
+     //            MutableStateFlow's            \\
+    // ------------------ init ------------------ \\
+    private  val _player1Life = MutableStateFlow(1000)
+    val player1Life: StateFlow<Int> = _player1Life
 
+    private val _player2Life = MutableStateFlow(1000)
+    val player2Life: StateFlow<Int> = _player2Life
 
+    private val _isPlayerTurn = MutableStateFlow(true)
+    val isPlayerTurn: StateFlow<Boolean> = _isPlayerTurn
+
+    private val _isGameOver = MutableStateFlow(false)
+    val isGameOver: StateFlow<Boolean> = _isGameOver
+
+    // ------------------ End ------------------ \\
+    val player1 = Player()
+    val player2 = Player()
+    val gameManager = GameManager()
+
+    val matrix = MainMatrix()
+
+    fun onCellCLick(line: Int, column: Int) {
+
+        val currentPlayer = if (gameManager.isPlayerTurn) player1 else player2
+        val success = matrix.alterBoard(line, column, currentPlayer)
+
+        if (success) {
+
+            val triadSuccess = matrix.hasAnyTriad(currentPlayer.playerSymbol)
+
+            if (triadSuccess.isNotEmpty()) {
+
+                matrix.removeTriads(triadSuccess)
+
+                if (currentPlayer == player1) {
+
+                    //gameManager.damage(player2, 200)
+                    _player2Life.value -= 200
+
+                } else {
+
+                    //gameManager.damage(player2, 200)
+                    _player1Life.value -= 200
+                }
+            }
+
+            if (matrix.isBoardFull()) {
+
+                matrix.clearBoard()
+
+            }
+
+            gameManager.switchTurn()
+
+        }
+    }
 }
