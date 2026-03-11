@@ -38,6 +38,9 @@ class GameViewModel {
         _board.value = matrix.getBoard()
         player1.playerSymbol = "X"
         player2.playerSymbol = "O"
+
+        player1.name = "Pedro"
+        player2.name = "Bot"
     }
 
     fun onCellCLick(line: Int, column: Int) {
