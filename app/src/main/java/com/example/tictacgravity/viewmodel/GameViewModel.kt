@@ -22,12 +22,23 @@ class GameViewModel {
     private val _isGameOver = MutableStateFlow(false)
     val isGameOver: StateFlow<Boolean> = _isGameOver
 
+    private val _board = MutableStateFlow(List(3){ List(3) {""} })
+    val board: StateFlow<List<List<String>>> = _board
+
     // ------------------ End ------------------ \\
-    val player1 = Player()
-    val player2 = Player()
+
     val gameManager = GameManager()
 
     val matrix = MainMatrix()
+    val player1 = Player()
+    val player2 = Player()
+
+
+    init {
+        _board.value = matrix.getBoard()
+        player1.playerSymbol = "X"
+        player2.playerSymbol = "O"
+    }
 
     fun onCellCLick(line: Int, column: Int) {
 
@@ -52,6 +63,10 @@ class GameViewModel {
                     //gameManager.damage(player2, 200)
                     _player1Life.value -= 200
                 }
+
+                if(_player1Life.value <= 0 || _player2Life.value <= 0){
+                    _isGameOver.value = true
+                }
             }
 
             if (matrix.isBoardFull()) {
@@ -60,6 +75,7 @@ class GameViewModel {
 
             }
 
+            _board.value = matrix.getBoard()
             gameManager.switchTurn()
 
         }
