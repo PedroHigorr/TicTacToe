@@ -83,4 +83,14 @@ class GameViewModel {
 
         }
     }
+
+    fun resetGame(){
+        _player1Life.value = 1000
+        _player2Life.value = 1000
+        _isGameOver.value = false
+        matrix.clearBoard()
+        _isPlayerTurn.value = true
+        _board.value = matrix.getBoard()
+
+    }
 }

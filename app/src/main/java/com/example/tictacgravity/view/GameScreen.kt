@@ -16,20 +16,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.tictacgravity.viewmodel.GameViewModel
 
-    @Composable
-    fun GameScreen(viewModel: GameViewModel) {
+@Composable
+fun GameScreen(viewModel: GameViewModel) {
 
-        val board by viewModel.board.collectAsState()
-        val player1Life by viewModel.player1Life.collectAsState()
-        val player2Life by viewModel.player2Life.collectAsState()
-        val isPlayerTurn by viewModel.isPlayerTurn.collectAsState()
-        val isGameOver by viewModel.isGameOver.collectAsState()
+    val board by viewModel.board.collectAsState()
+    val player1Life by viewModel.player1Life.collectAsState()
+    val player2Life by viewModel.player2Life.collectAsState()
+    val isPlayerTurn by viewModel.isPlayerTurn.collectAsState()
+    val isGameOver by viewModel.isGameOver.collectAsState()
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF906Df))
-        ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF906Df)),
+            contentAlignment = Alignment.Center
+    ) {
+        if (isGameOver) {
+
+            Text("Game Over")
+            viewModel.resetGame()
+
+        } else {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,7 +48,7 @@ import com.example.tictacgravity.viewmodel.GameViewModel
                 )
                 GameBoard(
                     board = board,
-                    onCellClick = {line, column -> viewModel.onCellCLick(line, column)}
+                    onCellClick = { line, column -> viewModel.onCellCLick(line, column) }
                 )
                 PlayerInfo(
                     name = viewModel.player2.name,
@@ -50,25 +57,26 @@ import com.example.tictacgravity.viewmodel.GameViewModel
             }
         }
     }
+}
 
-    @Composable
-    fun PlayerInfo(name: String, life: Int){
-        Text(
-            "${name}: ${life}"
-        )
-    }
+@Composable
+fun PlayerInfo(name: String, life: Int) {
+    Text(
+        "${name}: ${life}"
+    )
+}
 
-    @Composable
-    fun GameBoard( board: List<List<String>>, onCellClick: (Int, Int) -> Unit){
-        Column {
-            board.forEachIndexed { i, row ->
-                Row {
-                    row.forEachIndexed { j, cell ->
-                        Button(onClick = { onCellClick(i, j)}) {
-                            Text(cell)
-                        }
+@Composable
+fun GameBoard(board: List<List<String>>, onCellClick: (Int, Int) -> Unit) {
+    Column {
+        board.forEachIndexed { i, row ->
+            Row {
+                row.forEachIndexed { j, cell ->
+                    Button(onClick = { onCellClick(i, j) }) {
+                        Text(cell)
                     }
                 }
             }
         }
     }
+}
