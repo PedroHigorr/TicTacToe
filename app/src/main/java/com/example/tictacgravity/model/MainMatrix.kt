@@ -1,8 +1,9 @@
 package com.example.tictacgravity.model
 
+import android.util.Log
+
 class MainMatrix {
 
-    private var count = 1;
 
     private val board = Array(3) { Array(3) { "" } }
 
@@ -135,4 +136,29 @@ class MainMatrix {
 
         return board.map { row -> row.map { it } }
     }
+
+    fun applyGravity(pairs: List<Pair<Int, Int>>) {
+
+        val affectedColumns = pairs.map { it.second }.distinct()
+
+        for (column in affectedColumns) {
+            val lowestLine = pairs.filter { it.second == column }.maxOf { it.first }
+
+            for (emptyLine in lowestLine downTo 0) {
+
+                if (board[emptyLine][column] == "") {
+
+                    for (sourceLine in emptyLine - 1 downTo 0) {
+
+                        if (board[sourceLine][column] != "") {
+                            board[emptyLine][column] = board[sourceLine][column]
+                            board[sourceLine][column] = ""
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

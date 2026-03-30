@@ -50,38 +50,45 @@ class GameViewModel {
 
         if (success) {
 
-            val triadSuccess = matrix.hasAnyTriad(currentPlayer.playerSymbol)
+                var triadSuccess = matrix.hasAnyTriad(currentPlayer.playerSymbol)
 
-            if (triadSuccess.isNotEmpty()) {
+                while (triadSuccess.isNotEmpty()) {
 
-                matrix.removeTriads(triadSuccess)
+                    matrix.removeTriads(triadSuccess)
 
-                if (currentPlayer == player1) {
+                    if (currentPlayer == player1) {
 
-                    //gameManager.damage(player2, 200)
-                    _player2Life.value -= 200
+                        //gameManager.damage(player2, 200)
+                        _player2Life.value -= 200
 
-                } else {
+                    } else {
 
-                    //gameManager.damage(player2, 200)
-                    _player1Life.value -= 200
+                        //gameManager.damage(player2, 200)
+                        _player1Life.value -= 200
+                    }
+
+                    if (_player1Life.value <= 0 || _player2Life.value <= 0) {
+                        _isGameOver.value = true
+                    }
+
+                    matrix.applyGravity(triadSuccess)
+
+                    triadSuccess = matrix.hasAnyTriad(player1.playerSymbol)
+                        .ifEmpty { matrix.hasAnyTriad(player2.playerSymbol) }
                 }
 
-                if(_player1Life.value <= 0 || _player2Life.value <= 0){
-                    _isGameOver.value = true
+
+                if (matrix.isBoardFull()) {
+
+                    matrix.clearBoard()
+
                 }
-            }
 
-            if (matrix.isBoardFull()) {
-
-                matrix.clearBoard()
+                _board.value = matrix.getBoard()
+                gameManager.switchTurn()
 
             }
 
-            _board.value = matrix.getBoard()
-            gameManager.switchTurn()
-
-        }
     }
 
     fun resetGame(){
