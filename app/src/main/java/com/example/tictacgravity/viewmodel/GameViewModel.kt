@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 class GameViewModel {
      //            MutableStateFlow's            \\
     // ------------------ init ------------------ \\
+
     private  val _player1Life = MutableStateFlow(1000)
     val player1Life: StateFlow<Int> = _player1Life
 
